@@ -1,0 +1,78 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
+ */
+package register;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.register_user.Login;
+
+/**
+ *
+ * @author username
+ */
+public class LoginTest {
+    
+    public LoginTest() {
+    }
+    Login login = new Login();
+     String firstName = "LESEDI";
+      String lastName = "THABO";
+  
+  
+
+    // Username - correct
+    @Test
+    public void testCorrectUsername() {
+        assertTrue(login.checkUserName("kyl_1"));
+    }
+
+    // Username - incorrect
+    @Test
+    public void testIncorrectUsername() {
+        assertFalse(login.checkUserName("kyle!!!!"));
+    }
+
+    // Password - correct
+    @Test
+    public void testCorrectPassword() {
+        assertTrue(login.checkPasswordComplexity("Ch&&sec@ke99!"));
+    }
+
+    // Password - incorrect
+    @Test
+    public void testIncorrectPassword() {
+        assertFalse(login.checkPasswordComplexity("password"));
+    }
+
+    // Phone - correct
+    @Test
+    public void testCorrectPhoneNumber() {
+        assertTrue(login.checkCellPhoneNumber("+27838968976"));
+    }
+
+    // Phone - incorrect
+    @Test
+    public void testIncorrectPhoneNumber() {
+        assertFalse(login.checkCellPhoneNumber("08966553"));
+    }
+
+    // ✅ FIXED LOGIN STATUS TEST
+    @Test
+    public void testReturnLoginStatus() {
+        login.setFirstName("LESEDI");
+        login.setLastName("THABO");
+
+        String result = login.returnLoginStatus(true);
+
+        assertEquals(
+            "Welcome LESEDI THABO it is great to see you again",
+            result
+        );
+    }
+}

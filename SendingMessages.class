@@ -1,0 +1,146 @@
+package test.register_user;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Message {
+
+    private static int totalMessages = 0;
+
+    private String messageID;
+    private String recipient;
+    private String messageText;
+    private String messageHash;
+
+    static ArrayList<Message> sentMessages = new ArrayList<>();
+
+    // Capture message details
+    public void checkMessageID(Scanner input) {
+
+        // Generate random ID
+        messageID = String.format("%06d", (int) (Math.random() * 1000000));
+
+        // Validate recipient
+        while (true) {
+
+            System.out.print("Enter recipient number (+27...): ");
+            recipient = input.nextLine();
+
+            if (recipient.startsWith("+27") && recipient.length() == 12) {
+                break;
+            } else {
+                System.out.println("Invalid number format. Must be +27XXXXXXXXX");
+            }
+        }
+
+        // Validate message
+        while (true) {
+
+            System.out.print("Enter your message: ");
+            messageText = input.nextLine();
+
+            if (!messageText.trim().isEmpty() && messageText.length() <= 250) {
+                break;
+            } else {
+                System.out.println("Message must be 1–250 characters.");
+            }
+        }
+
+        // Create hash
+        messageHash = createMessageHash();
+    }
+
+    // Create hash
+    public String createMessageHash() {
+        String[] words = messageText.trim().split("\\s+");
+        String firstWord = words[0];
+        String lastWord = words[words.length - 1];
+        String hash = messageID.substring(0, 2)+ totalMessages
+                + firstWord
+                + lastWord;
+
+       
+        return hash.toUpperCase();
+    }
+
+    // Handle message actions
+    public void sendMessage(Scanner input) {
+
+        System.out.println("\nMessage ID: " + messageID); 
+        System.out.println("Message Hash: " + messageHash);
+
+        System.out.println("1. Send Message");
+        System.out.println("2. Disregard Message");
+        System.out.println("3. Store Message");
+
+        System.out.print("Choice: ");
+        String choice = input.nextLine();
+
+        switch (choice) {
+
+            case "1":
+                sentMessages.add(this);
+                totalMessages++;
+                System.out.println("Message sent");
+                break;
+
+            case "2":
+                System.out.println("Message discarded");
+                break;
+
+            case "3":
+                storeMessage();
+                System.out.println("Message stored");
+                break;
+
+            default:
+                System.out.println("Invalid choice");
+        }
+    }
+
+    // Print messages
+    public static String printMessages() {
+
+        if (sentMessages.isEmpty()) {
+            return "No messages sent";
+        } 
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Message m : sentMessages) {
+
+            sb.append("\nMessage ID: ").append(m.messageID);
+            sb.append("\nHash: ").append(m.messageHash);
+            sb.append("\nRecipient: ").append(m.recipient);
+            sb.append("\nMessage: ").append(m.messageText);
+            sb.append("\n");
+        }
+
+        return sb.toString();   
+    }
+
+    // Total messages
+    public static int returnTotalMessages() {
+        return totalMessages;
+    }
+
+    // Store message (on JSON file)
+    public void storeMessage() {
+    
+        try (FileWriter file = new FileWriter("messages.json", true)) {
+
+            file.write(""); 
+            file.write("\"messageID\": \"" + messageID + "\",\n");
+            file.write("\"messageHash\": \"" + messageHash + "\",\n");
+            file.write("\"recipient\": \"" + recipient + "\",\n");
+            file.write("\"message\": \"" + messageText + "\"\n");
+            file.write("}\\");
+
+        } catch (IOException e) {
+
+            System.out.println("Error storing message: " + e.getMessage());
+        }
+    }
+} 
