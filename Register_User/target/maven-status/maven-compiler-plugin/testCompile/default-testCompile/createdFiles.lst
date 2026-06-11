@@ -1,0 +1,5 @@
+org\junit\Assert.class
+test\register_user\MessageTest.class
+Register_UserTest.class
+test\register_user\ReportTest.class
+register\LoginTest.class

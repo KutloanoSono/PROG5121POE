@@ -1,0 +1,8 @@
+test\register_user\Message.class
+SendingMessages.class
+test\register_user\Login.class
+test\register_user\QuickChat.class
+test\register_user\Register_User.class
+test\register_user\Report.class
+com\mycompany\register_user\Quickchat.class
+QuickChat.class
