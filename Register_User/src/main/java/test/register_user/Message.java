@@ -8,12 +8,11 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 
 /**
- * Message class handles creation, storage, searching and reporting of messages
+ *
  * @author sonok
  */
 public class Message {
 
-    // ✅CHANGED: Made public so unit tests can access it
     static int totalMessages = 0;
 
     private String messageID;
@@ -21,35 +20,28 @@ public class Message {
     private String messageText;
     private String messageHash;
 
-    // Lists to store different types of messages
     static ArrayList<Message> sentMessages = new ArrayList<>();
     static ArrayList<Message> disregardedMessages = new ArrayList<>();
     static ArrayList<Message> storedMessages = new ArrayList<>();
 
-    // Parallel lists for tracking message data
     static ArrayList<String> messageHashes = new ArrayList<>();
     static ArrayList<String> messageIDs = new ArrayList<>();
     static ArrayList<String> messageRecipients = new ArrayList<>();
     static ArrayList<String> messageTexts = new ArrayList<>();
 
-    // ✅ ADDED: Default constructor (needed for unit tests)
     public Message() {}
 
-    // ✅ ADDED: Reset all stored data (used in unit tests)
     public static void resetMessages() {
         totalMessages = 0;
-
         sentMessages.clear();
         disregardedMessages.clear();
         storedMessages.clear();
-
         messageHashes.clear();
         messageIDs.clear();
         messageRecipients.clear();
         messageTexts.clear();
     }
 
-    // Capture message details from user
     public void checkMessageID(Scanner input) {
 
         messageID = String.format("%06d", (int) (Math.random() * 1000000));
@@ -80,7 +72,6 @@ public class Message {
         messageHash = createMessageHash();
     }
 
-    // Create a hash based on message details
     public String createMessageHash() {
 
         if (messageText == null || messageText.trim().isEmpty()) {
@@ -95,7 +86,6 @@ public class Message {
         return hash.toUpperCase();
     }
 
-    // Handle sending, discarding or storing messages
     public void sendMessage(Scanner input) {
 
         System.out.println("\nMessage ID: " + messageID);
@@ -140,7 +130,6 @@ public class Message {
         }
     }
 
-    // Display all sent messages
     public static String printMessages() {
         if (sentMessages.isEmpty()) return "No messages sent";
 
@@ -157,12 +146,10 @@ public class Message {
         return sb.toString();
     }
 
-    // Return total number of sent messages
     public static int returnTotalMessages() {
         return totalMessages;
     }
 
-    // Store message in JSON file
     public void storeMessage() {
         try (FileWriter file = new FileWriter("messages.json", true)) {
             file.write("{\n");
@@ -176,7 +163,6 @@ public class Message {
         }
     }
 
-    // Read messages from JSON file
     public static String readMessagesFromJSON() {
         StringBuilder result = new StringBuilder();
 
@@ -194,7 +180,6 @@ public class Message {
         return result.toString();
     }
 
-    // Load messages into memory from JSON file
     public static void loadMessagesFromJSON() {
 
         storedMessages.clear();
@@ -231,45 +216,56 @@ public class Message {
         }
     }
 
-    // ✅ Finds and returns the longest message
     public static String displayLongestMessages() {
+        String longest = "";
 
-        if (messageTexts.isEmpty()) return "No messages available";
-
-        int longestIndex = 0;
-
-        for (int i = 1; i < messageTexts.size(); i++) {
-            if (messageTexts.get(i).length() > messageTexts.get(longestIndex).length()) {
-                longestIndex = i;
+        for (Message m : sentMessages) {
+            if (m.getMessageText().length() > longest.length()) {
+                longest = m.getMessageText();
+            }
+        }
+        for (Message m : storedMessages) {
+            if (m.getMessageText().length() > longest.length()) {
+                longest = m.getMessageText();
+            }
+        }
+        for (Message m : disregardedMessages) {
+            if (m.getMessageText().length() > longest.length()) {
+                longest = m.getMessageText();
             }
         }
 
-        return "Longest message: " + messageTexts.get(longestIndex);
+        if (longest.equals("")) return "No messages available";
+        return "Longest message: " + longest;
     }
 
-    // ✅ ADDED: Matches unit test method name
     public static String displayLongestMessage() {
         return displayLongestMessages();
     }
 
-    // Search messages by recipient
     public static String searchByRecipient(String recipientNumber) {
         String result = "";
-        boolean found = false;
 
-        for (int i = 0; i < messageRecipients.size(); i++) {
-            if (messageRecipients.get(i).equals(recipientNumber)) {
-                result += messageTexts.get(i) + "\n";
-                found = true;
+        for (Message m : sentMessages) {
+            if (m.getRecipient().equals(recipientNumber)) {
+                result += m.getMessageText() + "\n";
+            }
+        }
+        for (Message m : storedMessages) {
+            if (m.getRecipient().equals(recipientNumber)) {
+                result += m.getMessageText() + "\n";
+            }
+        }
+        for (Message m : disregardedMessages) {
+            if (m.getRecipient().equals(recipientNumber)) {
+                result += m.getMessageText() + "\n";
             }
         }
 
-        if (!found) return "No messages found for recipient " + recipientNumber;
-
+        if (result.equals("")) return "No messages found for recipient " + recipientNumber;
         return result.trim();
     }
 
-    // ✅ ADDED: Search messages by ID (used in unit test)
     public static String searchByMessageID(String id) {
         String result = "";
         boolean found = false;
@@ -280,14 +276,12 @@ public class Message {
                 found = true;
             }
         }
-
         for (Message m : storedMessages) {
             if (m.getMessageID().equals(id)) {
                 result += m.getMessageText() + "\n";
                 found = true;
             }
         }
-
         for (Message m : disregardedMessages) {
             if (m.getMessageID().equals(id)) {
                 result += m.getMessageText() + "\n";
@@ -296,11 +290,9 @@ public class Message {
         }
 
         if (!found) return "No message found";
-
         return result.trim();
     }
 
-    // Delete message by hash
     public static String deleteByHash(String hash) {
         for (int i = 0; i < storedMessages.size(); i++) {
             Message m = storedMessages.get(i);
@@ -315,7 +307,6 @@ public class Message {
                     messageTexts.remove(parallelIndex);
                     messageIDs.remove(parallelIndex);
                 }
-                // ✅ FIXED format for unit test
                 return "Message: \"" + deletedText + "\" successfully deleted.";
             }
         }
@@ -323,7 +314,6 @@ public class Message {
         return "Hash not found, no message deleted";
     }
 
-    // Menu system
     public static void showMenu(Scanner input) {
 
         boolean running = true;
@@ -345,7 +335,6 @@ public class Message {
             String choice = input.nextLine();
 
             switch (choice) {
-
                 case "1":
                     Message msg = new Message();
                     msg.checkMessageID(input);
@@ -399,7 +388,6 @@ public class Message {
         }
     }
 
-    // Getters and setters
     public String getMessageID() { return messageID; }
     public String getRecipient() { return recipient; }
     public String getMessageText() { return messageText; }
