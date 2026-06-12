@@ -1,0 +1,32 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package test.register_user;
+
+/**
+ *
+ * @author sonok
+ */
+
+public class Register_User {
+    
+    public static void main(String[] args) {
+     
+        Login login = new Login();
+        QuickChat.main(args);
+
+        System.out.println("=== REGISTRATION ===");
+        login.registerNames();
+        login.registerUsername();
+        login.registerPassword();
+        login.registerPhoneNumber();
+
+        System.out.println(login.registerUser());
+
+        System.out.println("=== LOGIN ===");
+        boolean loginSuccess = login.loginUser();
+        System.out.println(login.returnLoginStatus(loginSuccess));
+        
+    }
+}

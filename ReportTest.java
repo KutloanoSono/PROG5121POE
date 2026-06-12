@@ -1,18 +1,8 @@
+package test.register_user;
 
 import java.util.Scanner;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/** 
- *
- * @author sonok
- */
-   public class Login {
-    
- 
+public class Login {
 
     private String username;
     private String password;
@@ -22,7 +12,7 @@ import java.util.Scanner;
 
     Scanner input = new Scanner(System.in);
 
-   
+    // Setters (for testing if needed)
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -31,8 +21,9 @@ import java.util.Scanner;
         this.lastName = lastName;
     }
 
-    // Register Names
+    // Register names
     public void registerNames() {
+
         System.out.print("Enter First Name: ");
         firstName = input.nextLine();
 
@@ -40,14 +31,16 @@ import java.util.Scanner;
         lastName = input.nextLine();
     }
 
-    // Username
+    // Username registration
     public void registerUsername() {
+
         do {
+
             System.out.print("Enter your Username: ");
             username = input.nextLine();
 
             if (!checkUserName(username)) {
-                System.out.println("Username is incorrectly formatted. Must contain underscore and max 5 chars.");
+                System.out.println("Username is incorrectly formatted. Must contain '_' and be max 5 characters.");
             }
 
         } while (!checkUserName(username));
@@ -55,85 +48,111 @@ import java.util.Scanner;
         System.out.println("Username successfully captured.");
     }
 
-    // Password
+    // Password registration
     public void registerPassword() {
+
         do {
+
             System.out.print("Enter Password: ");
             password = input.nextLine();
 
             if (!checkPasswordComplexity(password)) {
-                System.out.println("Password does not meet complexity requirements.");
+                System.out.println("Password must be at least 8 chars, include 1 uppercase, 1 number, and 1 special character.");
             }
 
-        } while (checkPasswordComplexity(password));
+        } while (!checkPasswordComplexity(password));
 
-        System.out.println("Password successfully captured");
+        System.out.println("Password successfully captured.");
     }
 
-    // Phone
+    // Phone number registration
     public void registerPhoneNumber() {
+
         do {
-            System.out.print("Enter phone number with (+27) code ");
+
+            System.out.print("Enter phone number (+27...): ");
             phoneNumber = input.nextLine();
 
             if (!checkCellPhoneNumber(phoneNumber)) {
-                System.out.println("Cell phone number incorrectly formatted");
+                System.out.println("Cell phone number incorrectly formatted. Must start with +27 and have 12 characters.");
             }
 
         } while (!checkCellPhoneNumber(phoneNumber));
 
-        System.out.println("Cell phone number successfully added");
+        System.out.println("Cell phone number successfully added.");
     }
 
-    // FIXEDku VALIDATION METHODS
+    // Username validation
     public boolean checkUserName(String username) {
         return username.contains("_") && username.length() <= 5;
     }
 
+    // Password validation
     public boolean checkPasswordComplexity(String password) {
         return password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$");
     }
 
+    // Phone validation
     public boolean checkCellPhoneNumber(String phoneNumber) {
         return phoneNumber.matches("^\\+27[0-9]{9}$");
     }
 
     // Registration status
     public String registerUser() {
-        if (!checkUserName(username)) return "Username is incorrectly formatted.";
-        if (!checkPasswordComplexity(password)) return "Password does not meet complexity requirements.";
-        if (!checkCellPhoneNumber(phoneNumber)) return "Phone number is incorrectly formatted.";
+
+        if (!checkUserName(username)) {
+            return "Username is incorrectly formatted.";
+        }
+
+        if (!checkPasswordComplexity(password)) {
+            return "Password does not meet complexity requirements.";
+        }
+
+        if (!checkCellPhoneNumber(phoneNumber)) {
+            return "Phone number is incorrectly formatted.";
+        }
+
         return "Registration successful!";
     }
 
-    //  LOGIN 
+    // LOGIN FIXED METHOD
     public boolean loginUser() {
+
         String userAttempt;
         String passAttempt;
 
+        boolean loggedIn = false;
+
         do {
+
             System.out.print("Enter username: ");
             userAttempt = input.nextLine();
 
             System.out.print("Enter password: ");
             passAttempt = input.nextLine();
 
-            if (!userAttempt.equals(username) || !passAttempt.equals(password)) {
+            if (userAttempt.equals(username) && passAttempt.equals(password)) {
+
+                System.out.println("Login successful!");
+                loggedIn = true;
+
+            } else {
+
                 System.out.println("Username or password incorrect. Try again.");
             }
 
-        } while (!userAttempt.equals(username) || !passAttempt.equals(password));
+        } while (!loggedIn);
 
         return true;
     }
 
-    // Login message
+    // Login status message
     public String returnLoginStatus(boolean loginSuccess) {
-        if (loginSuccess)
+
+        if (loginSuccess) {
             return "Welcome " + firstName + " " + lastName + " it is great to see you again";
-        else
+        } else {
             return "Login failed. Please check your username and password.";
+        }
     }
-
-   }
-
+}

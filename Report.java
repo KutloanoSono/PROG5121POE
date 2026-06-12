@@ -1,5 +1,6 @@
 
 import java.util.Scanner;
+import test.register_user.QuickChat;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -65,7 +66,7 @@ import java.util.Scanner;
                 System.out.println("Password does not meet complexity requirements.");
             }
 
-        } while (checkPasswordComplexity(password));
+        } while (!checkPasswordComplexity(password));
 
         System.out.println("Password successfully captured");
     }
@@ -129,10 +130,12 @@ import java.util.Scanner;
 
     // Login message
     public String returnLoginStatus(boolean loginSuccess) {
-        if (loginSuccess)
+        if (loginSuccess){
             return "Welcome " + firstName + " " + lastName + " it is great to see you again";
-        else
-            return "Login failed. Please check your username and password.";
+        
+        }
+        else{
+            return "Login failed. Please check your username and password.";}
     }
 
    }
